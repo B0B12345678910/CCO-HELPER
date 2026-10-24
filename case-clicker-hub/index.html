@@ -505,7 +505,7 @@ async function askSend(text){
     if(truncated)ASK.turns[ASK.turns.length-1].note='Answer was cut short. Ask for less at a time.';
   }catch(e){
     if(live&&e&&e.text){live.content=e.text;delete live.live;live.note=e.code==='cancelled'?'Stopped.':'Interrupted. '+(ASK_ERR[e.code]||'')}
-    else{if(live)ASK.turns.splice(ASK.turns.indexOf(live),1);ASK.turns.pop();if(e&&e.code!=='cancelled'){ASK.err=ASK_ERR[e&&e.code]||'Something went wrong. Try again.';ASK.draft=text}}
+    else{if(live)ASK.turns.splice(ASK.turns.indexOf(live),1);ASK.turns.pop();if(e&&e.code!=='cancelled'){ASK.err=(ASK_ERR[e&&e.code]||'Something went wrong. Try again.')+(BACKEND==='groq'&&e&&e.message?' ['+String(e.message).slice(0,300)+']':'');ASK.draft=text}}
     if(e&&e.code==='not_granted'||e&&e.code==='sampling_disabled')ASK.sample=null;
   }finally{ASK.busy=false;ASK.ctl=null;askUi();askMsgs()}
 }
